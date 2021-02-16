@@ -30,7 +30,7 @@ pub fn build_signed_request(
             request.push_str(param.as_ref());
         }
         request.pop(); // remove last &
-
+        println!("{}", request);
         Ok(request)
     } else {
         bail!("Failed to get timestamp")

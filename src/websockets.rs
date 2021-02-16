@@ -10,6 +10,9 @@ use tungstenite::client::AutoStream;
 use tungstenite::handshake::client::Response;
 
 static WEBSOCKET_URL: &str = "wss://stream.binance.com:9443/ws/";
+static WEBSOCKET_TEST_URL: &str = "wss://testnet.binance.vision/ws";
+static WEBSOCKET_LOCALHOST_URL: &str = "ws://localhost:8765/";
+
 static WEBSOCKET_MULTI_STREAM: &str = "wss://stream.binance.com:9443/stream?streams="; // <streamName1>/<streamName2>/<streamName3>
 
 static OUTBOUND_ACCOUNT_INFO: &str = "outboundAccountInfo";
@@ -36,6 +39,12 @@ pub enum WebsocketEvent {
     BookTicker(BookTickerEvent),
 }
 
+pub enum MarketType {
+    Live,
+    Test,
+    LocalHost
+}
+
 pub struct WebSockets<'a> {
     pub socket: Option<(WebSocket<AutoStream>, Response)>,
     handler: Box<dyn FnMut(WebsocketEvent) -> Result<()> + 'a>,
@@ -54,9 +63,16 @@ impl<'a> WebSockets<'a> {
         }
     }
 
-    pub fn connect(&mut self, subscription: &'a str) -> Result<()> {
+    pub fn connect(&mut self, subscription: &'a str, market_type: MarketType) -> Result<()> {
         self.subscription = subscription;
-        let wss: String = format!("{}{}", WEBSOCKET_URL, subscription);
+
+        let socketurl: &str = match market_type
+        {
+            MarketType::Live => WEBSOCKET_URL,
+            MarketType::Test => WEBSOCKET_TEST_URL,
+            MarketType::LocalHost => WEBSOCKET_LOCALHOST_URL,
+        };
+        let wss: String = format!("{}{}", socketurl, subscription);
         let url = Url::parse(&wss)?;
 
         match connect(url) {
