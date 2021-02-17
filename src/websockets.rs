@@ -11,7 +11,7 @@ use tungstenite::handshake::client::Response;
 
 static WEBSOCKET_URL: &str = "wss://stream.binance.com:9443/ws/";
 static WEBSOCKET_TEST_URL: &str = "wss://testnet.binance.vision/ws";
-static WEBSOCKET_LOCALHOST_URL: &str = "ws://localhost:8765/";
+static WEBSOCKET_LOCALHOST_URL: &str = "ws://localhost:18765/";
 
 static WEBSOCKET_MULTI_STREAM: &str = "wss://stream.binance.com:9443/stream?streams="; // <streamName1>/<streamName2>/<streamName3>
 
@@ -73,6 +73,7 @@ impl<'a> WebSockets<'a> {
             MarketType::LocalHost => WEBSOCKET_LOCALHOST_URL,
         };
         let wss: String = format!("{}{}", socketurl, subscription);
+        println!("Websockets connect to {}.", wss);
         let url = Url::parse(&wss)?;
 
         match connect(url) {
