@@ -61,14 +61,15 @@ impl Client {
         if !request.is_empty() {
             url.push_str(format!("?{}", request).as_str());
         }
+        println!("get: {}", url);
 
         let response = reqwest::blocking::get(url.as_str())?;
-
         self.handler(response)
     }
 
     pub fn post(&self, endpoint: &str) -> Result<String> {
         let url: String = format!("{}{}", self.host, endpoint);
+        println!("post: {}", url);
 
         let client = reqwest::blocking::Client::new();
         let response = client
@@ -84,6 +85,7 @@ impl Client {
         let data: String = format!("listenKey={}", listen_key);
 
         let client = reqwest::blocking::Client::new();
+        println!("put: {}", url);
         let response = client
             .put(url.as_str())
             .headers(self.build_headers(false)?)
@@ -98,11 +100,13 @@ impl Client {
         let data: String = format!("listenKey={}", listen_key);
 
         let client = reqwest::blocking::Client::new();
+        println!("delete: {}", url);
         let response = client
             .delete(url.as_str())
             .headers(self.build_headers(false)?)
             .body(data)
             .send()?;
+            println!("{}", url);
 
         self.handler(response)
     }
@@ -114,6 +118,7 @@ impl Client {
         let signature = hex_encode(signed_key.finalize().into_bytes());
         let request_body: String = format!("{}&signature={}", request, signature);
         let url: String = format!("{}{}?{}", self.host, endpoint, request_body);
+        println!("{}", url);
 
         url
     }
