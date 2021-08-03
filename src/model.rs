@@ -281,6 +281,8 @@ pub enum KlineSummaries {
 #[serde(rename_all = "camelCase")]
 pub struct Tickers {
     pub symbol: String,
+    #[serde(rename = "E")]
+    pub event_time: u64,
     #[serde(with = "string_or_float")]
     pub bid_price: f64,
     #[serde(with = "string_or_float")]
@@ -653,7 +655,7 @@ pub struct BookTickerEvent {
     #[serde(rename = "u")]
     pub update_id: u64,
 
-    // Added event time to booktickerevent
+    // Added event time to
     #[serde(rename = "E")]
     pub event_time: u64,
 
