@@ -653,6 +653,7 @@ pub struct BookTickerEvent {
     #[serde(rename = "u")]
     pub update_id: u64,
 
+    // Added event time to booktickerevent
     #[serde(rename = "E")]
     pub event_time: u64,
 
